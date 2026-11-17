@@ -2,7 +2,8 @@
 <html lang="ms">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f5c3a">
 <meta name="robots" content="noindex,nofollow">
 <title>Dking Admin</title>
 <style>
@@ -13,7 +14,7 @@ h1{font-size:22px;color:var(--g)}
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;font-size:14px}
 .pri{background:var(--g);color:#fff;border-color:var(--g);font-weight:700}
-input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:15px;background:#fff}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:16px;background:#fff}
 label{font-size:12px;font-weight:600;color:var(--mut);display:block;margin-bottom:2px}
 #login{max-width:380px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px}
 .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;display:grid;grid-template-columns:96px 1fr;gap:12px}
@@ -28,6 +29,8 @@ label{font-size:12px;font-weight:600;color:var(--mut);display:block;margin-botto
 .msg{background:#fff7d6;border:1px solid #f0dd8a;border-radius:10px;padding:10px;font-size:13px;margin-bottom:12px}
 .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px;box-shadow:0 -4px 14px #0002}
 .bar button{width:100%;max-width:760px;display:block;margin:0 auto;padding:13px;font-size:16px}
+.bar{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+button{min-height:40px}
 .hide{display:none!important}
 </style>
 </head>
@@ -87,7 +90,7 @@ async function load(){
 function render(){
   $("#list").innerHTML=items.length?items.map((p,i)=>`
   <div class="card" data-id="${p.id}">
-    <div class="th" data-act="img">${p.gambar?`<img src="${esc(p.gambar)}" alt="">`:"+ Gambar"}</div>
+    <div class="th" data-act="img">${p.gambar?`<img src="${esc(p.gambar)}" alt="" loading="lazy">`:"+ Gambar"}</div>
     <div class="f">
       <div><label>Nama barang</label><input data-f="nama" value="${esc(p.nama)}"></div>
       <div class="two">
@@ -156,7 +159,7 @@ $("#pick").onchange=e=>{
   const id=pickId, img=new Image(), url=URL.createObjectURL(f);
   setSt(id,"Memuat naik gambar...");
   img.onload=()=>{
-    const M=800,r=Math.min(1,M/Math.max(img.width,img.height));
+    const M=640,r=Math.min(1,M/Math.max(img.width,img.height));
     const c=document.createElement("canvas"); c.width=Math.round(img.width*r); c.height=Math.round(img.height*r);
     c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url);
     c.toBlob(async blob=>{
@@ -169,7 +172,7 @@ $("#pick").onchange=e=>{
         find(id).gambar=pub; render();
         const m=old&&old.split("/produk/")[1]; if(m) sb.storage.from("produk").remove([m]);
       }
-    },"image/jpeg",0.78);
+    },"image/jpeg",0.72);
   };
   img.onerror=()=>setSt(id,"Gambar tak dapat dibaca. Guna JPG atau PNG.","err");
   img.src=url;
