@@ -23,8 +23,10 @@ body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background
 .trust span::before{content:"✓";color:var(--y);font-weight:900;margin-right:6px}
 .wrap{max-width:1000px;margin:0 auto;padding:16px}
 .tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
-.tab{border:1px solid var(--line);background:#fff;padding:8px 18px;border-radius:99px;font-size:14px;cursor:pointer;white-space:nowrap;font-family:inherit;color:var(--ink)}
-.tab.on{background:var(--k);color:var(--y);border-color:var(--k);font-weight:700}
+.tabs{gap:10px}
+.tab{min-width:120px;padding:12px 22px;border:1.5px solid #e6d9a8;border-radius:14px;background:linear-gradient(180deg,#fff,#fbf5df);font-size:15px;font-weight:700;letter-spacing:.5px;cursor:pointer;white-space:nowrap;font-family:inherit;color:#3a2f0a;box-shadow:0 2px 8px #1a14000d;transition:transform .15s,box-shadow .15s}
+.tab:hover{transform:translateY(-1px);box-shadow:0 6px 14px #1a140018}
+.tab.on{background:linear-gradient(180deg,#232323,#050505);color:var(--y);border-color:var(--y);box-shadow:0 0 0 3px #f5c51833,0 8px 18px #0004}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,250px));justify-content:center;gap:16px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 18px #1a14000d;transition:transform .15s,box-shadow .15s}
 .card:hover{transform:translateY(-3px);box-shadow:0 10px 26px #1a140020}
@@ -86,6 +88,7 @@ footer{background:#0a0a0a;color:#bdb394;text-align:center;font-size:12.5px;paddi
 .hero{padding:24px 12px 20px}.hero h1{font-size:29px}
 .steps{gap:8px;margin-top:18px;display:grid;grid-template-columns:1fr 1fr}.steps li{padding:10px 6px}.steps strong{font-size:14px}.steps small{font-size:10.5px}
 .wrap{padding:10px}
+.tab{flex:1 0 auto;min-width:0;padding:12px 16px}
 .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .pic{font-size:44px}
 .body{padding:10px;gap:5px}.body h3{font-size:14.5px}.price{font-size:18px}.price small{font-size:12.5px}.pp b{font-size:20px;padding:2px 11px 3px}
