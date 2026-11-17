@@ -20,8 +20,8 @@ header p{opacity:.9;font-size:14px;margin-top:4px}
 .tab.on{background:var(--g);color:#fff;border-color:var(--g)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-.pic{height:130px;background:linear-gradient(135deg,#eaf3d3,#f6e7a8);display:flex;align-items:center;justify-content:center;font-size:56px}
-.pic img{width:100%;height:100%;object-fit:cover}
+.pic{aspect-ratio:1/1;height:auto;background:linear-gradient(135deg,#eaf3d3,#f6e7a8);display:flex;align-items:center;justify-content:center;font-size:56px}
+.pic img{width:100%;height:100%;object-fit:contain;background:#fff}
 .body{padding:12px;display:flex;flex-direction:column;gap:6px;flex:1}
 .body h3{font-size:16px}
 .desc{font-size:13px;color:var(--mut);flex:1}
@@ -69,7 +69,7 @@ input,textarea{font-size:16px}
 header{padding:18px 14px 14px}header h1{font-size:26px}
 .wrap{padding:10px}
 .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.pic{height:118px;font-size:44px}
+.pic{font-size:44px}
 .body{padding:10px;gap:5px}.body h3{font-size:14.5px}.desc{font-size:12px}.price{font-size:17px}.price small{font-size:11.5px}
 .qty button{width:38px}
 .panel{width:100%}
