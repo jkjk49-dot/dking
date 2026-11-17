@@ -2,7 +2,8 @@
 <html lang="ms">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f5c3a">
 <title>Dking Durian – SS2, Petaling Jaya</title>
 <style>
 :root{--g:#1f5c3a;--g2:#2e7d4f;--gold:#e8b923;--bg:#f7f4ea;--ink:#1d2a22;--mut:#6b7a70;--card:#fff;--line:#e6e1cf;--red:#c0392b;--wa:#25d366}
@@ -57,6 +58,22 @@ input,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radiu
 .sec{background:#fff;border:1px dashed #cbbf8a;border-radius:10px;padding:10px;font-size:12.5px;color:var(--mut)}
 .link{background:none;border:1px solid var(--line);border-radius:10px;padding:9px;font-size:13px}
 footer{text-align:center;color:var(--mut);font-size:12.5px;padding:24px 16px}
+input,textarea{font-size:16px}
+.tabs{position:sticky;top:0;z-index:4;background:var(--bg);padding:8px 0 6px;margin:0 0 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.add,.link,#bar button,.tab{min-height:44px}
+.row .qty button{width:38px;height:40px}
+#bar{padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+.panel{height:100dvh;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+@media(max-width:600px){
+header{padding:18px 14px 14px}header h1{font-size:26px}
+.wrap{padding:10px}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pic{height:118px;font-size:44px}
+.body{padding:10px;gap:5px}.body h3{font-size:14.5px}.desc{font-size:12px}.price{font-size:17px}.price small{font-size:11.5px}
+.qty button{width:38px}
+.panel{width:100%}
+}
 </style>
 </head>
 <body>
@@ -125,7 +142,7 @@ async function load(){
     try{
       const r=await fetch(u.replace(/\/$/,"")+"/rest/v1/products?select=*&order=urutan.asc,created_at.asc",
         {cache:"no-store",headers:{apikey:k,Authorization:"Bearer "+k,"Accept-Profile":"dking_shop"}});
-      if(r.ok){const d=await r.json(); products=d.filter(o=>o.nama).map(norm); return}
+      if(r.ok){const d=await r.json(); products=d.filter(o=>o.nama).map(norm); window.__db=1; return}
     }catch(e){}
   }
   products=SAMPLE.map(norm);
@@ -142,7 +159,7 @@ function renderGrid(){
   $("#grid").innerHTML=list.map(p=>{
     const out=p.stok==="habis"||p.stok==="x"||p.stok==="no", n=cart[p.id]||0;
     return `<div class="card">
-      <div class="pic">${p.gambar?`<img src="${esc(p.gambar)}" alt="${esc(p.nama)}" onerror="this.parentNode.textContent='${esc(p.emoji)}'">`:esc(p.emoji)}</div>
+      <div class="pic">${p.gambar?`<img src="${esc(p.gambar)}" alt="${esc(p.nama)}" loading="lazy" decoding="async" onerror="this.parentNode.textContent='${esc(p.emoji)}'">`:esc(p.emoji)}</div>
       <div class="body">
         <span class="badge ${out?"out":""}">${out?"Habis stok":esc(p.kategori)}</span>
         <h3>${esc(p.nama)}</h3>
@@ -201,7 +218,9 @@ $("#ov").onclick=e=>{if(e.target.id==="ov")$("#ov").classList.remove("show")};
 $("#clear").onclick=()=>{cart={};save();renderGrid();renderBar();renderCart();$("#ov").classList.remove("show")};
 $("#copy").onclick=async()=>{try{await navigator.clipboard.writeText(message());$("#copy").textContent="Disalin ✓"}catch(e){$("#copy").textContent="Tak dapat salin – guna butang WhatsApp"}setTimeout(()=>$("#copy").textContent="Salin mesej pesanan",2000)};
 
+try{const c=JSON.parse(localStorage.getItem("dking_products")||"null");if(c&&c.length){products=c;renderTabs();renderGrid();renderBar()}}catch(e){}
 load().then(()=>{
+  if(window.__db){try{localStorage.setItem("dking_products",JSON.stringify(products))}catch(e){}}
   Object.keys(cart).forEach(id=>{if(!products.find(p=>p.id===id))delete cart[id]});
   renderTabs();renderGrid();renderBar();
 });
