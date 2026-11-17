@@ -34,6 +34,9 @@ body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background
 .body h3{flex:1}
 .price{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:22px;font-weight:800;color:var(--k)}
 .price small{font-size:14px;font-weight:600;color:var(--mut)}
+.pp{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.pp s{font-size:14px;font-weight:600;color:#9a9482}
+.pp b{background:#d62828;color:#fff;border-radius:10px;padding:1px 10px 2px;font-weight:800;box-shadow:0 2px 8px #d6282844}
 .badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#fff1b8;color:#6b5000;width:fit-content}
 .badge.out{background:#f9e0dc;color:var(--red)}
 button{font-family:inherit;cursor:pointer}
@@ -146,7 +149,7 @@ try { cart = JSON.parse(localStorage.getItem("dking_cart")||"{}"); } catch(e){}
 const save = () => { try { localStorage.setItem("dking_cart", JSON.stringify(cart)); } catch(e){} };
 
 function norm(o,i){
-  return {id:o.id||("p"+i),nama:o.nama,kategori:o.kategori||"Lain-lain",harga:parseFloat(String(o.harga).replace(/[^\d.]/g,""))||0,
+  return {id:o.id||("p"+i),nama:o.nama,kategori:o.kategori||"Lain-lain",harga:parseFloat(String(o.harga).replace(/[^\d.]/g,""))||0,harga_asal:parseFloat(String(o.harga_asal||0).replace(/[^\d.]/g,""))||0,
     unit:o.unit||"",penerangan:o.penerangan||"",stok:(o.stok||"ada").toLowerCase(),emoji:o.emoji||"🍈",gambar:o.gambar||""};
 }
 async function load(){
@@ -176,7 +179,7 @@ function renderGrid(){
       <div class="body">
         ${out?`<span class="badge out">Habis stok</span>`:""}
         <h3>${esc(p.nama)}</h3>
-        <div class="price"><span>${money(p.harga)}</span><small>${esc(p.unit)}</small></div>
+        <div class="price">${p.harga_asal>p.harga?`<span class="pp"><s>${money(p.harga_asal)}</s><b>${money(p.harga)}</b></span>`:`<span>${money(p.harga)}</span>`}<small>${esc(p.unit)}</small></div>
         ${out?`<button class="add" disabled>Habis</button>`:
           n?`<div class="qty"><button data-m="${esc(p.id)}">−</button><span>${n}</span><button data-p="${esc(p.id)}">+</button></div>`:
           `<button class="add" data-p="${esc(p.id)}">Tambah ke Cart</button>`}
