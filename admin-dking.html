@@ -3,35 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1f5c3a">
+<meta name="theme-color" content="#0b0613">
 <meta name="robots" content="noindex,nofollow">
 <title>Dking Admin</title>
 <style>
-:root{--g:#1f5c3a;--gold:#e8b923;--bg:#f2f0e6;--line:#ddd7c0;--red:#c0392b;--mut:#6b7a70}
+:root{--g:#4b2a7a;--gold:#d4af37;--bg:#f4f1f8;--line:#ddd3ea;--red:#c0392b;--mut:#6f6580}
 *{box-sizing:border-box;margin:0}
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:#1d2a22;padding:14px;padding-bottom:90px;max-width:760px;margin:0 auto}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:#1a1326;padding:14px;padding-bottom:90px;max-width:1180px;margin:0 auto}
 h1{font-size:22px;color:var(--g)}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 button{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 14px;font-size:14px}
-.pri{background:var(--g);color:#fff;border-color:var(--g);font-weight:700}
-input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:16px;background:#fff}
-label{font-size:12px;font-weight:600;color:var(--mut);display:block;margin-bottom:2px}
+.pri{background:linear-gradient(180deg,#5b3590,#3b1d63);color:#fff;border-color:var(--gold);font-weight:700}
+input,select,textarea{width:100%;padding:8px 9px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:16px;background:#fff;min-width:0}
+label{font-size:11px;font-weight:600;color:var(--mut);display:block;margin-bottom:2px}
 #login{max-width:380px;margin:60px auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px}
-.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;display:grid;grid-template-columns:96px 1fr;gap:12px}
-.th{width:96px;height:96px;border-radius:12px;border:1px dashed #b9b08a;background:#faf8ef;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;font-size:12px;color:var(--mut);text-align:center}
+.tools{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.tools input{max-width:320px}.cnt{font-size:13px;color:var(--mut);white-space:nowrap}
+.hd{display:none}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:8px;display:grid;gap:6px 8px;align-items:end;
+ grid-template-columns:64px 1fr 1fr;grid-template-areas:"th nama nama" "th harga unit" "kat kat stok" "desc desc desc" "acts acts acts"}
+.th{grid-area:th;width:64px;height:64px;border-radius:10px;border:1px dashed #b7a6d0;background:#faf8fd;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;font-size:11px;color:var(--mut);text-align:center;align-self:start}
 .th img{width:100%;height:100%;object-fit:cover}
-.f{display:flex;flex-direction:column;gap:8px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.full{grid-column:1/-1}
-.acts{display:flex;gap:6px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.mini{padding:7px 11px;font-size:13px}.del{color:var(--red)}
+.c-nama{grid-area:nama}.c-harga{grid-area:harga}.c-unit{grid-area:unit}.c-kat{grid-area:kat}.c-stok{grid-area:stok}.c-desc{grid-area:desc}.c-acts{grid-area:acts}
+.c-desc textarea{resize:vertical;height:38px}
+.c-acts{display:flex;gap:6px;align-items:center;justify-content:space-between}
+.mini{padding:6px 10px;font-size:13px;min-height:36px}.del{color:var(--red)}
 .st{font-size:12px;color:var(--mut)} .ok{color:var(--g);font-weight:600}.err{color:var(--red);font-weight:600}
-.msg{background:#fff7d6;border:1px solid #f0dd8a;border-radius:10px;padding:10px;font-size:13px;margin-bottom:12px}
-.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px;box-shadow:0 -4px 14px #0002}
-.bar button{width:100%;max-width:760px;display:block;margin:0 auto;padding:13px;font-size:16px}
-.bar{padding-bottom:calc(10px + env(safe-area-inset-bottom))}
-button{min-height:40px}
+.msg{background:#f8f1d8;border:1px solid #e6d58f;border-radius:10px;padding:9px;font-size:13px;margin-bottom:10px}
+.card.out .c-stok select{border-color:#e2b3ad;background:#fdf1ef}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid var(--gold);padding:10px 14px;box-shadow:0 -4px 14px #0002;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+.bar button{width:100%;max-width:1180px;display:block;margin:0 auto;padding:12px;font-size:16px}
 .hide{display:none!important}
+@media(min-width:900px){
+.hd,.card{grid-template-columns:56px minmax(150px,2fr) 84px 84px 120px 92px minmax(160px,2.4fr) 120px;grid-template-areas:"th nama harga unit kat stok desc acts"}
+.hd{display:grid;gap:8px;padding:0 8px 4px;font-size:11px;font-weight:600;color:var(--mut)}
+.hd span:first-child{grid-column:1}
+.card{align-items:center;padding:6px 8px;margin-bottom:6px}
+.th{width:48px;height:48px;align-self:center}
+.c-desc textarea{height:38px}
+.card label{display:none}
+}
 </style>
 </head>
 <body>
@@ -49,6 +60,8 @@ button{min-height:40px}
 <div id="app" class="hide">
   <div class="top"><h1>Urus Produk</h1><button id="out" class="mini">Log keluar</button></div>
   <div class="msg">Semua perubahan disimpan terus dan customer nampak serta-merta. Tekan kotak gambar untuk upload.</div>
+  <div class="tools"><input id="q" type="search" placeholder="Cari produk..."><span class="cnt" id="cnt"></span></div>
+  <div class="hd"><span>Gambar</span><span>Nama</span><span>Harga RM</span><span>Unit</span><span>Kategori</span><span>Stok</span><span>Penerangan</span><span></span></div>
   <div id="list"></div>
 </div>
 <div class="bar hide" id="addbar"><button class="pri" id="add">+ Tambah produk</button></div>
@@ -87,31 +100,33 @@ async function load(){
   if(error){$("#list").innerHTML=`<div class="msg">Gagal muat produk: ${esc(error.message)}. Pastikan SQL setup sudah dijalankan.</div>`;return}
   items=data; render();
 }
+const BASE_CATS=["Segar","Beku","Lain-lain"];
+function catOptions(cur){
+  const all=[...new Set([...BASE_CATS,...items.map(x=>x.kategori).filter(Boolean)])];
+  return all.map(c=>`<option ${c===cur?"selected":""}>${esc(c)}</option>`).join("")+`<option value="__new">+ Kategori baru…</option>`;
+}
 function render(){
   $("#list").innerHTML=items.length?items.map((p,i)=>`
-  <div class="card" data-id="${p.id}">
-    <div class="th" data-act="img">${p.gambar?`<img src="${esc(p.gambar)}" alt="" loading="lazy">`:"+ Gambar"}</div>
-    <div class="f">
-      <div><label>Nama barang</label><input data-f="nama" value="${esc(p.nama)}"></div>
-      <div class="two">
-        <div><label>Harga (RM)</label><input data-f="harga" inputmode="decimal" value="${esc(p.harga)}"></div>
-        <div><label>Unit</label><input data-f="unit" value="${esc(p.unit)}" placeholder="kg / pek"></div>
-      </div>
+  <div class="card ${p.stok==="habis"?"out":""}" data-id="${p.id}">
+    <div class="th" data-act="img" title="Tukar gambar">${p.gambar?`<img src="${esc(p.gambar)}" alt="" loading="lazy">`:"+ Gambar"}</div>
+    <div class="c-nama"><label>Nama barang</label><input data-f="nama" value="${esc(p.nama)}" placeholder="Nama barang"></div>
+    <div class="c-harga"><label>Harga (RM)</label><input data-f="harga" inputmode="decimal" value="${esc(p.harga)}"></div>
+    <div class="c-unit"><label>Unit</label><input data-f="unit" value="${esc(p.unit)}" placeholder="kg / pek"></div>
+    <div class="c-kat"><label>Kategori</label><select data-f="kategori">${catOptions(p.kategori)}</select></div>
+    <div class="c-stok"><label>Stok</label><select data-f="stok"><option value="ada" ${p.stok!=="habis"?"selected":""}>Ada</option><option value="habis" ${p.stok==="habis"?"selected":""}>Habis</option></select></div>
+    <div class="c-desc"><label>Penerangan</label><textarea data-f="penerangan" rows="1" placeholder="Penerangan ringkas">${esc(p.penerangan)}</textarea></div>
+    <div class="c-acts"><span class="st" data-st></span>
+      <span><button class="mini" data-act="up" ${i==0?"disabled":""}>↑</button> <button class="mini" data-act="dn" ${i==items.length-1?"disabled":""}>↓</button> <button class="mini del" data-act="del">✕</button></span>
     </div>
-    <div class="f full">
-      <div class="two">
-        <div><label>Kategori</label><input data-f="kategori" list="cats" value="${esc(p.kategori)}"></div>
-        <div><label>Stok</label><select data-f="stok"><option value="ada" ${p.stok!=="habis"?"selected":""}>Ada</option><option value="habis" ${p.stok==="habis"?"selected":""}>Habis</option></select></div>
-      </div>
-      <div><label>Penerangan</label><textarea data-f="penerangan" rows="2">${esc(p.penerangan)}</textarea></div>
-      <div class="acts">
-        <span class="st" data-st></span>
-        <span><button class="mini" data-act="up" ${i==0?"disabled":""}>↑</button> <button class="mini" data-act="dn" ${i==items.length-1?"disabled":""}>↓</button> <button class="mini del" data-act="del">Padam</button></span>
-      </div>
-    </div>
-  </div>`).join("")+`<datalist id="cats"><option>Segar</option><option>Beku</option><option>Lain-lain</option></datalist>`
-  :`<div class="msg">Belum ada produk. Tekan "Tambah produk".</div>`;
+  </div>`).join(""):`<div class="msg">Belum ada produk. Tekan "Tambah produk".</div>`;
+  filter();
 }
+function filter(){
+  const q=($("#q").value||"").toLowerCase().trim(); let n=0;
+  document.querySelectorAll("#list .card").forEach(c=>{const p=find(c.dataset.id);const ok=!q||(p&&(p.nama||"").toLowerCase().includes(q));c.classList.toggle("hide",!ok);if(ok)n++});
+  $("#cnt").textContent=n+" produk";
+}
+$("#q").addEventListener("input",filter);
 const find=id=>items.find(x=>x.id===id);
 function setSt(id,t,cls){const el=document.querySelector(`[data-id="${id}"] [data-st]`); if(el){el.textContent=t;el.className="st "+(cls||"")}}
 async function save(id,patch){
@@ -124,7 +139,10 @@ const timers={};
 document.addEventListener("input",e=>{
   const t=e.target, card=t.closest(".card"); if(!card||!t.dataset.f) return;
   const id=card.dataset.id, p=find(id); if(!p) return;
-  let v=t.value; if(t.dataset.f==="harga") v=parseFloat(String(v).replace(/[^\d.]/g,""))||0;
+  let v=t.value;
+  if(t.dataset.f==="kategori"&&v==="__new"){const n=(prompt("Nama kategori baru:")||"").trim(); if(!n){t.value=p.kategori;return} v=n; p.kategori=n; save(id,{kategori:n}); render(); return}
+  if(t.dataset.f==="stok") card.classList.toggle("out",v==="habis");
+  if(t.dataset.f==="harga") v=parseFloat(String(v).replace(/[^\d.]/g,""))||0;
   p[t.dataset.f]=v;
   clearTimeout(timers[id+t.dataset.f]);
   timers[id+t.dataset.f]=setTimeout(()=>save(id,{[t.dataset.f]:v}),700);
@@ -150,7 +168,7 @@ $("#add").onclick=async()=>{
   const max=items.reduce((m,p)=>Math.max(m,p.urutan||0),-1);
   const {data,error}=await sb.from("products").insert({urutan:max+1}).select().single();
   if(error){alert("Gagal tambah: pastikan anda log masuk sebagai admin.");return}
-  items.push(data); render();
+  items.push(data); $("#q").value=""; render();
   document.querySelector(`[data-id="${data.id}"]`).scrollIntoView({behavior:"smooth",block:"center"});
 };
 /* Upload gambar: kecilkan ke 800px JPEG, simpan di Supabase Storage */
