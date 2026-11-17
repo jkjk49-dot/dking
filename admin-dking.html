@@ -21,11 +21,10 @@ label{font-size:11px;font-weight:600;color:var(--mut);display:block;margin-botto
 .tools input{max-width:320px}.cnt{font-size:13px;color:var(--mut);white-space:nowrap}
 .hd{display:none}
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:8px;display:grid;gap:6px 8px;align-items:end;
- grid-template-columns:64px 1fr 1fr;grid-template-areas:"th nama nama" "th harga unit" "kat kat stok" "desc desc desc" "acts acts acts"}
+ grid-template-columns:64px 1fr 1fr;grid-template-areas:"th nama nama" "th harga unit" "kat kat stok" "acts acts acts"}
 .th{grid-area:th;width:64px;height:64px;border-radius:10px;border:1px dashed #b7a6d0;background:#faf8fd;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;font-size:11px;color:var(--mut);text-align:center;align-self:start}
 .th img{width:100%;height:100%;object-fit:cover}
-.c-nama{grid-area:nama}.c-harga{grid-area:harga}.c-unit{grid-area:unit}.c-kat{grid-area:kat}.c-stok{grid-area:stok}.c-desc{grid-area:desc}.c-acts{grid-area:acts}
-.c-desc textarea{resize:vertical;height:38px}
+.c-nama{grid-area:nama}.c-harga{grid-area:harga}.c-unit{grid-area:unit}.c-kat{grid-area:kat}.c-stok{grid-area:stok}.c-acts{grid-area:acts}
 .c-acts{display:flex;gap:6px;align-items:center;justify-content:space-between}
 .mini{padding:6px 10px;font-size:13px;min-height:36px}.del{color:var(--red)}
 .st{font-size:12px;color:var(--mut)} .ok{color:var(--g);font-weight:600}.err{color:var(--red);font-weight:600}
@@ -35,12 +34,11 @@ label{font-size:11px;font-weight:600;color:var(--mut);display:block;margin-botto
 .bar button{width:100%;max-width:1180px;display:block;margin:0 auto;padding:12px;font-size:16px}
 .hide{display:none!important}
 @media(min-width:900px){
-.hd,.card{grid-template-columns:56px minmax(150px,2fr) 84px 84px 120px 92px minmax(160px,2.4fr) 120px;grid-template-areas:"th nama harga unit kat stok desc acts"}
+.hd,.card{grid-template-columns:56px minmax(180px,3fr) 100px 100px 140px 100px 120px;grid-template-areas:"th nama harga unit kat stok acts"}
 .hd{display:grid;gap:8px;padding:0 8px 4px;font-size:11px;font-weight:600;color:var(--mut)}
 .hd span:first-child{grid-column:1}
 .card{align-items:center;padding:6px 8px;margin-bottom:6px}
 .th{width:48px;height:48px;align-self:center}
-.c-desc textarea{height:38px}
 .card label{display:none}
 }
 </style>
@@ -61,7 +59,7 @@ label{font-size:11px;font-weight:600;color:var(--mut);display:block;margin-botto
   <div class="top"><h1>Urus Produk</h1><button id="out" class="mini">Log keluar</button></div>
   <div class="msg">Semua perubahan disimpan terus dan customer nampak serta-merta. Tekan kotak gambar untuk upload.</div>
   <div class="tools"><input id="q" type="search" placeholder="Cari produk..."><span class="cnt" id="cnt"></span></div>
-  <div class="hd"><span>Gambar</span><span>Nama</span><span>Harga RM</span><span>Unit</span><span>Kategori</span><span>Stok</span><span>Penerangan</span><span></span></div>
+  <div class="hd"><span>Gambar</span><span>Nama</span><span>Harga RM</span><span>Unit</span><span>Kategori</span><span>Stok</span><span></span></div>
   <div id="list"></div>
 </div>
 <div class="bar hide" id="addbar"><button class="pri" id="add">+ Tambah produk</button></div>
@@ -114,7 +112,6 @@ function render(){
     <div class="c-unit"><label>Unit</label><input data-f="unit" value="${esc(p.unit)}" placeholder="kg / pek"></div>
     <div class="c-kat"><label>Kategori</label><select data-f="kategori">${catOptions(p.kategori)}</select></div>
     <div class="c-stok"><label>Stok</label><select data-f="stok"><option value="ada" ${p.stok!=="habis"?"selected":""}>Ada</option><option value="habis" ${p.stok==="habis"?"selected":""}>Habis</option></select></div>
-    <div class="c-desc"><label>Penerangan</label><textarea data-f="penerangan" rows="1" placeholder="Penerangan ringkas">${esc(p.penerangan)}</textarea></div>
     <div class="c-acts"><span class="st" data-st></span>
       <span><button class="mini" data-act="up" ${i==0?"disabled":""}>↑</button> <button class="mini" data-act="dn" ${i==items.length-1?"disabled":""}>↓</button> <button class="mini del" data-act="del">✕</button></span>
     </div>
