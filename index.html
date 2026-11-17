@@ -55,6 +55,8 @@ label{font-size:13px;font-weight:600;display:block;margin-bottom:3px}
 input,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:15px}
 .wa{display:block;text-align:center;background:var(--wa);color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:12px;font-size:16px}
 .wa.dis{background:#b5c9bc;pointer-events:none}
+.sub{display:flex;justify-content:space-between;font-size:14px;color:var(--mut);padding:2px 0}
+select{width:100%;padding:11px;border:1px solid #d9cfa8;border-radius:10px;font:inherit;font-size:16px;background:#fff}
 .sec{background:#fff;border:1px dashed #cbbf8a;border-radius:10px;padding:10px;font-size:12.5px;color:var(--mut)}
 .link{background:none;border:1px solid var(--line);border-radius:10px;padding:9px;font-size:13px}
 footer{text-align:center;color:var(--mut);font-size:12.5px;padding:24px 16px}
@@ -97,14 +99,14 @@ header{padding:18px 14px 14px}header h1{font-size:26px}
 <div class="ov" id="ov"><div class="panel">
   <h2>Cart anda <button class="x" id="close" aria-label="Tutup">×</button></h2>
   <div id="lines"></div>
+  <div><label for="zone">Kawasan penghantaran</label><select id="zone"><option value="9">KL / Selangor – RM9</option><option value="25">Luar KL / Selangor – RM25</option></select></div>
+  <div class="sub"><span>Subtotal</span><span id="sub"></span></div>
+  <div class="sub"><span>Penghantaran</span><span id="ship"></span></div>
   <div class="tot"><span>Jumlah</span><span id="total"></span></div>
-  <div class="sec">Kos penghantaran (Lalamove) &amp; stok akan disahkan oleh CS semasa bayaran.</div>
-  <div><label for="nm">Nama</label><input id="nm" autocomplete="name"></div>
+  <div><label for="nm">Nama (wajib)</label><input id="nm" autocomplete="name"></div>
   <div><label for="ph">No. telefon</label><input id="ph" type="tel" autocomplete="tel"></div>
-  <div><label for="ad">Alamat penghantaran / ambil sendiri</label><textarea id="ad" rows="2"></textarea></div>
-  <div><label for="nt">Catatan (tarikh &amp; masa)</label><input id="nt"></div>
+  <div><label for="ad">Alamat penghantaran (wajib)</label><textarea id="ad" rows="2"></textarea></div>
   <a class="wa dis" id="wa" href="#" target="_blank" rel="noopener">Checkout &amp; WhatsApp CS</a>
-  <button class="link" id="copy">Salin mesej pesanan</button>
   <button class="link" id="clear">Kosongkan cart</button>
 </div></div>
 
@@ -182,6 +184,8 @@ function change(id,d){
 }
 function items(){return Object.keys(cart).map(id=>({p:products.find(x=>x.id===id),q:cart[id]})).filter(x=>x.p)}
 function totals(){const it=items();return {n:it.reduce((a,x)=>a+x.q,0),t:it.reduce((a,x)=>a+x.q*x.p.harga,0)}}
+function ship(){return Number($("#zone").value)||0}
+function zoneName(){const z=$("#zone");return z.options[z.selectedIndex].text}
 function renderBar(){
   const {n,t}=totals();
   $("#bar").classList.toggle("show",n>0);
@@ -191,10 +195,10 @@ function message(){
   const it=items(), {t}=totals();
   const L=["Hi Dking, saya nak order:",""];
   it.forEach(x=>L.push(`• ${x.p.nama} x${x.q} (${x.p.unit}) – ${money(x.q*x.p.harga)}`));
-  L.push("","Jumlah: "+money(t)+" (belum termasuk penghantaran)");
-  const nm=$("#nm").value.trim(),ph=$("#ph").value.trim(),ad=$("#ad").value.trim(),nt=$("#nt").value.trim();
+  L.push("","Subtotal: "+money(t),"Penghantaran ("+zoneName().split(" – ")[0]+"): "+money(ship()),"Jumlah: "+money(t+ship()));
+  const nm=$("#nm").value.trim(),ph=$("#ph").value.trim(),ad=$("#ad").value.trim();
   L.push("");
-  if(nm)L.push("Nama: "+nm); if(ph)L.push("Tel: "+ph); if(ad)L.push("Alamat: "+ad); if(nt)L.push("Catatan: "+nt);
+  if(nm)L.push("Nama: "+nm); if(ph)L.push("Tel: "+ph); if(ad)L.push("Alamat: "+ad);
   L.push("","Boleh bagi details bayaran? Terima kasih!");
   return L.join("\n");
 }
@@ -203,20 +207,20 @@ function renderCart(){
   $("#lines").innerHTML=it.length?it.map(x=>`<div class="row"><div class="n">${esc(x.p.nama)}<small>${money(x.p.harga)} / ${esc(x.p.unit)}</small></div>
     <div class="qty"><button data-m="${esc(x.p.id)}">−</button><span>${x.q}</span><button data-p="${esc(x.p.id)}">+</button></div>
     <b style="width:70px;text-align:right;font-size:14px">${money(x.q*x.p.harga)}</b></div>`).join(""):`<div class="empty">Cart kosong</div>`;
-  $("#total").textContent=money(totals().t);
+  $("#sub").textContent=money(totals().t);$("#ship").textContent=money(ship());$("#total").textContent=money(totals().t+ship());
   bind(); updWA();
 }
 function updWA(){
-  const ok=items().length>0, a=$("#wa");
+  const ok=items().length>0&&$("#nm").value.trim()&&$("#ad").value.trim(), a=$("#wa");
+  $("#sub").textContent=money(totals().t);$("#ship").textContent=money(ship());$("#total").textContent=money(totals().t+ship());
   a.classList.toggle("dis",!ok);
   a.href=ok?`https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(message())}`:"#";
 }
-["nm","ph","ad","nt"].forEach(i=>$("#"+i).addEventListener("input",updWA));
+["nm","ph","ad","zone"].forEach(i=>$("#"+i).addEventListener("input",updWA));
 $("#open").onclick=()=>{renderCart();$("#ov").classList.add("show")};
 $("#close").onclick=()=>$("#ov").classList.remove("show");
 $("#ov").onclick=e=>{if(e.target.id==="ov")$("#ov").classList.remove("show")};
 $("#clear").onclick=()=>{cart={};save();renderGrid();renderBar();renderCart();$("#ov").classList.remove("show")};
-$("#copy").onclick=async()=>{try{await navigator.clipboard.writeText(message());$("#copy").textContent="Disalin ✓"}catch(e){$("#copy").textContent="Tak dapat salin – guna butang WhatsApp"}setTimeout(()=>$("#copy").textContent="Salin mesej pesanan",2000)};
 
 try{const c=JSON.parse(localStorage.getItem("dking_products")||"null");if(c&&c.length){products=c;renderTabs();renderGrid();renderBar()}}catch(e){}
 load().then(()=>{
