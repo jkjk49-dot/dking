@@ -28,15 +28,22 @@ body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 4px 18px #1a14000d;transition:transform .15s,box-shadow .15s}
 .card:hover{transform:translateY(-3px);box-shadow:0 10px 26px #1a140020}
 .pic{aspect-ratio:1/1;height:auto;background:linear-gradient(135deg,#fff7d6,#f5e6a8);display:flex;align-items:center;justify-content:center;font-size:56px}
-.pic img{width:100%;height:100%;object-fit:contain;background:#fff}
+.pic{position:relative;overflow:hidden}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff}
 .body{padding:13px;display:flex;flex-direction:column;gap:6px;flex:1}
 .body h3{font-size:16px;font-weight:700}
 .body h3{flex:1}
 .price{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:22px;font-weight:800;color:var(--k)}
 .price small{font-size:14px;font-weight:600;color:var(--mut)}
-.pp{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
-.pp s{font-size:14px;font-weight:600;color:#9a9482}
-.pp b{background:#d62828;color:#fff;border-radius:10px;padding:1px 10px 2px;font-weight:800;box-shadow:0 2px 8px #d6282844}
+.pp{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.pp s{font-size:13px;font-weight:600;color:#9a9482}
+.pp b{position:relative;overflow:hidden;display:inline-flex;align-items:baseline;gap:3px;background:linear-gradient(135deg,#ff2d1a 0%,#ff6a00 55%,#ffb800 100%);color:#fff;border-radius:12px;padding:3px 14px 4px;font-family:"Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;font-weight:900;font-size:24px;letter-spacing:.3px;text-shadow:0 2px 0 #b01600aa;box-shadow:0 4px 14px #ff4d0066,inset 0 0 0 2px #ffe27a;animation:pulse 1.8s ease-in-out infinite}
+.pp b i{font-style:normal;font-size:12px;font-weight:800}
+.pp b::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#ffffffaa,transparent);transform:skewX(-20deg);animation:shine 2.6s infinite}
+.off{position:absolute;top:10px;left:0;background:#111;color:var(--y);font-weight:900;font-size:12px;letter-spacing:.5px;padding:5px 12px 5px 10px;border-radius:0 99px 99px 0;box-shadow:0 3px 10px #0006}
+@keyframes shine{0%{left:-60%}60%,100%{left:140%}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@media(prefers-reduced-motion:reduce){.pp b,.pp b::after{animation:none}}
 .badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#fff1b8;color:#6b5000;width:fit-content}
 .badge.out{background:#f9e0dc;color:var(--red)}
 button{font-family:inherit;cursor:pointer}
@@ -80,7 +87,7 @@ footer{background:#0a0a0a;color:#bdb394;text-align:center;font-size:12.5px;paddi
 .wrap{padding:10px}
 .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .pic{font-size:44px}
-.body{padding:10px;gap:5px}.body h3{font-size:14.5px}.price{font-size:18px}.price small{font-size:12.5px}
+.body{padding:10px;gap:5px}.body h3{font-size:14.5px}.price{font-size:18px}.price small{font-size:12.5px}.pp b{font-size:20px;padding:2px 11px 3px}
 .qty button{width:38px}
 .panel{width:100%}
 }
@@ -173,13 +180,13 @@ function renderGrid(){
   const list=products.filter(p=>cat==="Semua"||p.kategori===cat);
   $("#msg").style.display=list.length?"none":"block"; $("#msg").textContent="Tiada produk buat masa ini.";
   $("#grid").innerHTML=list.map(p=>{
-    const out=p.stok_qty<=0, n=cart[p.id]||0;
+    const out=p.stok_qty<=0, n=cart[p.id]||0, promo=p.harga_asal>p.harga, pct=promo?Math.round((1-p.harga/p.harga_asal)*100):0, num=money(p.harga).slice(CONFIG.CURRENCY.length+1);
     return `<div class="card">
-      <div class="pic">${p.gambar?`<img src="${esc(p.gambar)}" alt="${esc(p.nama)}" loading="lazy" decoding="async" onerror="this.parentNode.textContent='${esc(p.emoji)}'">`:esc(p.emoji)}</div>
+      <div class="pic">${p.gambar?`<img src="${esc(p.gambar)}" alt="${esc(p.nama)}" loading="lazy" decoding="async" onerror="this.parentNode.textContent='${esc(p.emoji)}'">`:esc(p.emoji)}${promo?`<span class="off">JIMAT ${pct}%</span>`:""}</div>
       <div class="body">
         ${out?`<span class="badge out">Habis stok</span>`:p.stok_qty<=5?`<span class="badge">Tinggal ${p.stok_qty}</span>`:""}
         <h3>${esc(p.nama)}</h3>
-        <div class="price">${p.harga_asal>p.harga?`<span class="pp"><s>${money(p.harga_asal)}</s><b>${money(p.harga)}</b></span>`:`<span>${money(p.harga)}</span>`}<small>${esc(p.unit)}</small></div>
+        <div class="price">${p.harga_asal>p.harga?`<span class="pp"><s>${money(p.harga_asal)}</s><b><i>${CONFIG.CURRENCY}</i>${num}</b></span>`:`<span>${money(p.harga)}</span>`}<small>${esc(p.unit)}</small></div>
         ${out?`<button class="add" disabled>Habis</button>`:
           n?`<div class="qty"><button data-m="${esc(p.id)}">−</button><span>${n}</span><button data-p="${esc(p.id)}">+</button></div>`:
           `<button class="add" data-p="${esc(p.id)}">Tambah ke Cart</button>`}
