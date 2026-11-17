@@ -60,7 +60,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 let sb=null, items=[], pickId=null;
 
 if(!C.SUPABASE_URL||!C.SUPABASE_KEY||typeof supabase==="undefined"){ $("#setup").classList.remove("hide"); }
-else { sb=supabase.createClient(C.SUPABASE_URL,C.SUPABASE_KEY); init(); }
+else { sb=supabase.createClient(C.SUPABASE_URL,C.SUPABASE_KEY,{db:{schema:"dking_shop"}}); init(); }
 
 async function init(){
   const {data}=await sb.auth.getSession();
