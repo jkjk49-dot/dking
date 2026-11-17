@@ -149,7 +149,7 @@ try { cart = JSON.parse(localStorage.getItem("dking_cart")||"{}"); } catch(e){}
 const save = () => { try { localStorage.setItem("dking_cart", JSON.stringify(cart)); } catch(e){} };
 
 function norm(o,i){
-  return {id:o.id||("p"+i),nama:o.nama,kategori:o.kategori||"Lain-lain",harga:parseFloat(String(o.harga).replace(/[^\d.]/g,""))||0,harga_asal:parseFloat(String(o.harga_asal||0).replace(/[^\d.]/g,""))||0,
+  return {id:o.id||("p"+i),nama:o.nama,kategori:o.kategori||"Lain-lain",harga:parseFloat(String(o.harga).replace(/[^\d.]/g,""))||0,harga_asal:parseFloat(String(o.harga_asal||0).replace(/[^\d.]/g,""))||0,stok_qty:o.stok_qty!=null?Math.max(0,parseInt(o.stok_qty,10)||0):((o.stok||"ada").toLowerCase()==="habis"?0:99),
     unit:o.unit||"",penerangan:o.penerangan||"",stok:(o.stok||"ada").toLowerCase(),emoji:o.emoji||"🍈",gambar:o.gambar||""};
 }
 async function load(){
@@ -173,11 +173,11 @@ function renderGrid(){
   const list=products.filter(p=>cat==="Semua"||p.kategori===cat);
   $("#msg").style.display=list.length?"none":"block"; $("#msg").textContent="Tiada produk buat masa ini.";
   $("#grid").innerHTML=list.map(p=>{
-    const out=p.stok==="habis"||p.stok==="x"||p.stok==="no", n=cart[p.id]||0;
+    const out=p.stok_qty<=0, n=cart[p.id]||0;
     return `<div class="card">
       <div class="pic">${p.gambar?`<img src="${esc(p.gambar)}" alt="${esc(p.nama)}" loading="lazy" decoding="async" onerror="this.parentNode.textContent='${esc(p.emoji)}'">`:esc(p.emoji)}</div>
       <div class="body">
-        ${out?`<span class="badge out">Habis stok</span>`:""}
+        ${out?`<span class="badge out">Habis stok</span>`:p.stok_qty<=5?`<span class="badge">Tinggal ${p.stok_qty}</span>`:""}
         <h3>${esc(p.nama)}</h3>
         <div class="price">${p.harga_asal>p.harga?`<span class="pp"><s>${money(p.harga_asal)}</s><b>${money(p.harga)}</b></span>`:`<span>${money(p.harga)}</span>`}<small>${esc(p.unit)}</small></div>
         ${out?`<button class="add" disabled>Habis</button>`:
@@ -192,6 +192,7 @@ function bind(){
 }
 function change(id,d){
   const v=(cart[id]||0)+d;
+  if(d>0){const pr=products.find(x=>x.id===id); if(pr&&v>pr.stok_qty) return}
   if(v<=0) delete cart[id]; else cart[id]=v;
   save(); renderGrid(); renderBar(); renderCart();
 }
