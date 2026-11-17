@@ -29,7 +29,7 @@ label{font-size:11px;font-weight:600;color:var(--mut);display:block;margin-botto
 .mini{padding:6px 10px;font-size:13px;min-height:36px}.del{color:var(--red)}
 .st{font-size:12px;color:var(--mut)} .ok{color:var(--g);font-weight:600}.err{color:var(--red);font-weight:600}
 .msg{background:#f8f1d8;border:1px solid #e6d58f;border-radius:10px;padding:9px;font-size:13px;margin-bottom:10px}
-.card.out .c-stok select{border-color:#e2b3ad;background:#fdf1ef}
+.card.out .c-stok input{border-color:#e2b3ad;background:#fdf1ef}
 .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid var(--gold);padding:10px 14px;box-shadow:0 -4px 14px #0002;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 .bar button{width:100%;max-width:1180px;display:block;margin:0 auto;padding:12px;font-size:16px}
 .hide{display:none!important}
@@ -105,14 +105,14 @@ function catOptions(cur){
 }
 function render(){
   $("#list").innerHTML=items.length?items.map((p,i)=>`
-  <div class="card ${p.stok==="habis"?"out":""}" data-id="${p.id}">
+  <div class="card ${(p.stok_qty|0)<=0?"out":""}" data-id="${p.id}">
     <div class="th" data-act="img" title="Tukar gambar">${p.gambar?`<img src="${esc(p.gambar)}" alt="" loading="lazy">`:"+ Gambar"}</div>
     <div class="c-nama"><label>Nama barang</label><input data-f="nama" value="${esc(p.nama)}" placeholder="Nama barang"></div>
     <div class="c-asal"><label>Harga asal (RM)</label><input data-f="harga_asal" inputmode="decimal" value="${esc(p.harga_asal||"")}" placeholder="kosong = tiada promo"></div>
     <div class="c-harga"><label>Harga jual / promo (RM)</label><input data-f="harga" inputmode="decimal" value="${esc(p.harga)}"></div>
     <div class="c-unit"><label>Unit</label><input data-f="unit" value="${esc(p.unit)}" placeholder="kg / pek"></div>
     <div class="c-kat"><label>Kategori</label><select data-f="kategori">${catOptions(p.kategori)}</select></div>
-    <div class="c-stok"><label>Stok</label><select data-f="stok"><option value="ada" ${p.stok!=="habis"?"selected":""}>Ada</option><option value="habis" ${p.stok==="habis"?"selected":""}>Habis</option></select></div>
+    <div class="c-stok"><label>Stok (0 = habis)</label><input data-f="stok_qty" type="number" min="0" step="1" inputmode="numeric" value="${esc(p.stok_qty??0)}"></div>
     <div class="c-acts"><span class="st" data-st></span>
       <span><button class="mini" data-act="up" ${i==0?"disabled":""}>↑</button> <button class="mini" data-act="dn" ${i==items.length-1?"disabled":""}>↓</button> <button class="mini del" data-act="del">✕</button></span>
     </div>
@@ -139,7 +139,7 @@ document.addEventListener("input",e=>{
   const id=card.dataset.id, p=find(id); if(!p) return;
   let v=t.value;
   if(t.dataset.f==="kategori"&&v==="__new"){const n=(prompt("Nama kategori baru:")||"").trim(); if(!n){t.value=p.kategori;return} v=n; p.kategori=n; save(id,{kategori:n}); render(); return}
-  if(t.dataset.f==="stok") card.classList.toggle("out",v==="habis");
+  if(t.dataset.f==="stok_qty"){v=Math.max(0,parseInt(v,10)||0); card.classList.toggle("out",v<=0)}
   if(t.dataset.f==="harga"||t.dataset.f==="harga_asal"){v=parseFloat(String(v).replace(/[^\d.]/g,""))||0; if(t.dataset.f==="harga_asal"&&!v) v=null}
   p[t.dataset.f]=v;
   clearTimeout(timers[id+t.dataset.f]);
