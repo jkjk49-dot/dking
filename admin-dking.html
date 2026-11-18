@@ -98,7 +98,7 @@ async function load(){
   if(error){$("#list").innerHTML=`<div class="msg">Gagal muat produk: ${esc(error.message)}. Pastikan SQL setup sudah dijalankan.</div>`;return}
   items=data; render();
 }
-const BASE_CATS=["Segar","Beku","Lain-lain"];
+const BASE_CATS=["FRESH","FROZEN","Lain-lain"];
 function catOptions(cur){
   const all=[...new Set([...BASE_CATS,...items.map(x=>x.kategori).filter(Boolean)])];
   return all.map(c=>`<option ${c===cur?"selected":""}>${esc(c)}</option>`).join("")+`<option value="__new">+ Kategori baru…</option>`;
