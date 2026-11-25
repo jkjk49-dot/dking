@@ -179,14 +179,15 @@ async function load(){
   products=SAMPLE.map(norm);
 }
 
-function cats(){return ["Semua",...new Set(products.map(p=>p.kategori))]}
+const PROMO_TAB="Promo Hari ini";
+function cats(){return ["Semua",...new Set(products.map(p=>p.kategori)),PROMO_TAB]}
 function renderTabs(){
   $("#tabs").innerHTML=cats().map(c=>`<button class="tab ${c===cat?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
   document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{cat=b.dataset.c;renderTabs();renderGrid()});
 }
 function renderGrid(){
-  const list=products.filter(p=>cat==="Semua"||p.kategori===cat);
-  $("#msg").style.display=list.length?"none":"block"; $("#msg").textContent="Tiada produk buat masa ini.";
+  const list=products.filter(p=>cat==="Semua"||(cat===PROMO_TAB?p.harga_asal>p.harga:p.kategori===cat));
+  $("#msg").style.display=list.length?"none":"block"; $("#msg").textContent=cat===PROMO_TAB?"Tiada promo buat masa ini.":"Tiada produk buat masa ini.";
   $("#grid").innerHTML=list.map(p=>{
     const out=p.stok_qty<=0, n=cart[p.id]||0, promo=p.harga_asal>p.harga, pct=promo?Math.round((1-p.harga/p.harga_asal)*100):0, num=money(p.harga).slice(CONFIG.CURRENCY.length+1);
     return `<div class="card">
