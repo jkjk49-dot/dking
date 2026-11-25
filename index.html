@@ -101,7 +101,9 @@ footer{background:#0a0a0a;color:#bdb394;text-align:center;font-size:12.5px;paddi
 .qty button{width:38px}
 .panel{width:100%}
 }
-.hero h1{font-size:clamp(20px,6.4vw,42px);white-space:nowrap}
+.hero h1{font-size:clamp(16px,4.9vw,42px);white-space:nowrap}
+.tab.promo{background:linear-gradient(180deg,#ff7a45,#e8212f);color:#fff;border-color:#ff9d6e;box-shadow:0 4px 12px #e8212f55}
+.tab.promo.on{background:linear-gradient(180deg,#ff5a2a,#c8101f);color:#fff;border-color:#ffd24a;box-shadow:0 0 0 3px #ff5a2a44,0 8px 18px #e8212f66}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -110,7 +112,7 @@ footer{background:#0a0a0a;color:#bdb394;text-align:center;font-size:12.5px;paddi
 <header class="hero">
   <div class="brand">DKING ONLINE</div>
   <h1>Rasa <span>Kayangan</span>, Harga <span>Marhaen</span></h1>
-  <p>Durian segar &amp; beku · SS2, Petaling Jaya</p>
+  <p>Premium Durian Segar &amp; Beku, Penghantaran Satu Malaysia</p>
   <ol class="steps">
     <li><b>1</b><strong>Order</strong><small>Pilih durian &amp; masuk cart</small></li>
     <li><b>2</b><strong>Submit</strong><small>Isi alamat, tekan Checkout</small></li>
@@ -191,7 +193,7 @@ window.addEventListener("resize",alignTabs);
 const PROMO_TAB="Promo Hari ini";
 function cats(){return ["Semua",...new Set(products.map(p=>p.kategori)),PROMO_TAB]}
 function renderTabs(){
-  $("#tabs").innerHTML=cats().map(c=>`<button class="tab ${c===cat?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
+  $("#tabs").innerHTML=cats().map(c=>`<button class="tab ${c===cat?"on":""}${c===PROMO_TAB?" promo":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
   document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{cat=b.dataset.c;renderTabs();renderGrid()});
 }
 function renderGrid(){
