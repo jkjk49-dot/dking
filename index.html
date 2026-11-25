@@ -191,10 +191,10 @@ function alignTabs(){const t=document.getElementById("tabs"),c=document.querySel
 const _renderGrid0=renderGrid;renderGrid=function(){_renderGrid0.apply(this,arguments);alignTabs()};
 window.addEventListener("resize",alignTabs);
 const PROMO_TAB="Promo Hari ini";
-function cats(){return ["Semua",...new Set(products.map(p=>p.kategori)),PROMO_TAB]}
+function cats(){return [...new Set(products.map(p=>p.kategori)),PROMO_TAB]}
 function renderTabs(){
   $("#tabs").innerHTML=cats().map(c=>`<button class="tab ${c===cat?"on":""}${c===PROMO_TAB?" promo":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
-  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{cat=b.dataset.c;renderTabs();renderGrid()});
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{cat=(cat===b.dataset.c?"Semua":b.dataset.c);renderTabs();renderGrid()});
 }
 function renderGrid(){
   const list=products.filter(p=>cat==="Semua"||(cat===PROMO_TAB?p.harga_asal>p.harga:p.kategori===cat));
