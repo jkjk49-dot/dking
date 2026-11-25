@@ -19,8 +19,11 @@ body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background
 .steps b{display:inline-flex;width:30px;height:30px;border-radius:50%;background:linear-gradient(180deg,#ffd93b,#e0a800);color:#1a1400;align-items:center;justify-content:center;font-size:14px;margin-bottom:6px;box-shadow:0 2px 8px #f5c51855}
 .steps strong{display:block;font-size:16px;letter-spacing:.5px;color:#fff}
 .steps small{display:block;font-size:12px;opacity:.8;margin-top:2px;line-height:1.3}
-.trust{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 26px;margin-top:22px;font-size:17px;font-weight:700;color:#f3e4a6;letter-spacing:.3px}
-.trust span::before{content:"✓";color:#86efac;font-weight:900;margin-right:8px}
+.trust{display:flex;justify-content:center;flex-wrap:wrap;gap:12px 34px;margin-top:24px;font-family:"Poppins","Segoe UI",system-ui,sans-serif;font-size:22px;font-weight:600;color:#fff7cf;letter-spacing:.3px}
+.trust span{display:inline-flex;align-items:center}
+.trust span::before{content:"✓";color:#7dffb0;font-size:1.7em;line-height:1;font-weight:900;margin-right:10px;text-shadow:0 0 12px rgba(125,255,176,.55)}
+@media(max-width:560px){.trust{font-size:17px;gap:8px 18px}.trust span::before{font-size:1.5em;margin-right:6px}}
+
 .wrap{max-width:1000px;margin:0 auto;padding:16px}
 .tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}
 .tabs{gap:10px}
@@ -99,6 +102,7 @@ footer{background:#0a0a0a;color:#bdb394;text-align:center;font-size:12.5px;paddi
 .panel{width:100%}
 }
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
