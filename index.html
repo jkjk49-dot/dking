@@ -183,6 +183,10 @@ async function load(){
   products=SAMPLE.map(norm);
 }
 
+/* Selaraskan tab "Semua" dengan tepi kiri kad pertama */
+function alignTabs(){const t=document.getElementById("tabs"),c=document.querySelector("#grid .card");if(!t||!c)return;t.style.paddingLeft="0px";const off=c.getBoundingClientRect().left-t.getBoundingClientRect().left;t.style.paddingLeft=(off>0?Math.round(off):0)+"px"}
+const _renderGrid0=renderGrid;renderGrid=function(){_renderGrid0.apply(this,arguments);alignTabs()};
+window.addEventListener("resize",alignTabs);
 const PROMO_TAB="Promo Hari ini";
 function cats(){return ["Semua",...new Set(products.map(p=>p.kategori)),PROMO_TAB]}
 function renderTabs(){
