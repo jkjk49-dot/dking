@@ -32,6 +32,7 @@ label{font-size:11px;font-weight:600;color:var(--mut);display:block;margin-botto
 .card.out .c-stok input{border-color:#e2b3ad;background:#fdf1ef}
 .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid var(--gold);padding:10px 14px;box-shadow:0 -4px 14px #0002;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 .bar button{width:100%;max-width:1180px;display:block;margin:0 auto;padding:12px;font-size:16px}
+.fee{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}.fee b{font-size:14px;color:var(--g)}.fr{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;align-items:end;max-width:520px}.fr .st{grid-column:1/-1}
 .hide{display:none!important}
 @media(min-width:900px){
 .hd,.card{grid-template-columns:56px minmax(160px,3fr) 96px 96px 90px 130px 96px 120px;grid-template-areas:"th nama asal harga unit kat stok acts"}
@@ -58,7 +59,8 @@ label{font-size:11px;font-weight:600;color:var(--mut);display:block;margin-botto
 <div id="app" class="hide">
   <div class="top"><h1>Urus Produk</h1><button id="out" class="mini">Log keluar</button></div>
   <div class="msg">Semua perubahan disimpan terus dan customer nampak serta-merta. Tekan kotak gambar untuk upload.</div>
-  <div class="tools"><input id="q" type="search" placeholder="Cari produk..."><span class="cnt" id="cnt"></span></div>
+  <div class="fee"><b>Delivery fee (RM)</b><div class="fr"><div><label for="f-klsel">KL / Selangor</label><input id="f-klsel" inputmode="decimal"></div><div><label for="f-luar">Luar KL / Selangor</label><input id="f-luar" inputmode="decimal"></div><span class="st" id="f-st"></span></div></div>
+<div class="tools"><input id="q" type="search" placeholder="Cari produk..."><span class="cnt" id="cnt"></span></div>
   <div class="hd"><span>Gambar</span><span>Nama</span><span>Harga asal</span><span>Harga jual</span><span>Unit</span><span>Kategori</span><span>Stok</span><span></span></div>
   <div id="list"></div>
 </div>
@@ -83,7 +85,7 @@ async function init(){
 function showLogin(){ $("#login").classList.remove("hide"); $("#app").classList.add("hide"); $("#addbar").classList.add("hide"); }
 async function showApp(){
   $("#login").classList.add("hide"); $("#app").classList.remove("hide"); $("#addbar").classList.remove("hide");
-  await load();
+  await load(); loadFees();
 }
 $("#login").onsubmit=async e=>{
   e.preventDefault(); $("#lerr").textContent="";
@@ -124,6 +126,24 @@ function filter(){
   document.querySelectorAll("#list .card").forEach(c=>{const p=find(c.dataset.id);const ok=!q||(p&&(p.nama||"").toLowerCase().includes(q));c.classList.toggle("hide",!ok);if(ok)n++});
   $("#cnt").textContent=n+" produk";
 }
+/* Delivery fee: disimpan dalam jadual settings (dking_shop.settings), website baca terus */
+async function loadFees(){
+const st=$("#f-st");
+const {data,error}=await sb.from("settings").select("key,value");
+if(error){st.textContent="Jadual settings belum dibuat di Supabase. Jalankan SQL setup dulu.";st.className="st err";return}
+const m={}; data.forEach(r=>{m[r.key]=r.value});
+$("#f-klsel").value=m.delivery_klsel??5; $("#f-luar").value=m.delivery_luar??15;
+}
+[["f-klsel","delivery_klsel"],["f-luar","delivery_luar"]].forEach(([id,key])=>{
+let t; $("#"+id).addEventListener("input",()=>{clearTimeout(t); t=setTimeout(async()=>{
+const st=$("#f-st"), v=parseFloat(String($("#"+id).value).replace(/[^\d.]/g,""));
+if(!Number.isFinite(v)){st.textContent="Masukkan nombor.";st.className="st err";return}
+st.textContent="Menyimpan..."; st.className="st";
+const {error}=await sb.from("settings").upsert({key,value:v,updated_at:new Date().toISOString()});
+if(error){st.textContent="Gagal simpan: akaun bukan admin atau jadual belum dibuat.";st.className="st err"}
+else{st.textContent="Disimpan ✓ (customer nampak serta-merta)";st.className="st ok"}
+},700)});
+});
 $("#q").addEventListener("input",filter);
 const find=id=>items.find(x=>x.id===id);
 function setSt(id,t,cls){const el=document.querySelector(`[data-id="${id}"] [data-st]`); if(el){el.textContent=t;el.className="st "+(cls||"")}}
